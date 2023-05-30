@@ -1,0 +1,103 @@
+--Data Processing
+--this is for data quality checks, to check on duplicates, null values, whitespaces etc.
+
+-- check for duplicate ride_id (yes, but different booking)
+SELECT ride_id, COUNT(ride_id)
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+GROUP BY ride_id
+HAVING COUNT(ride_id) >1
+
+
+--check for null values for started_at and ended_at (nil)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE started_at IS NULL OR ended_at IS NULL
+
+--check for null values for start_station_id and start_station_name (yes)(deleted)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE TRIM(start_station_id) IS NULL OR TRIM(start_station_name) IS NULL
+
+--check for null values for end_station_id and end_station_name (yes)(deleted)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE TRIM(end_station_id) IS NULL OR TRIM(end_station_name) IS NULL
+
+--check for null values for start_lat and start_lng (nil)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE start_lat IS NULL OR start_lng IS NULL
+
+--check for null values for end_lat and end_lng (nil)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE end_lat IS NULL OR end_lng IS NULL
+
+--check for null values for member_casual (nil)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE TRIM(member_casual) IS NULL
+
+--create temp table for duplicate ride_id 
+WITH temp_table AS (
+SELECT ride_id, COUNT(ride_id) AS total
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+GROUP BY ride_id
+HAVING total >1
+)
+
+--use the inner join function to add rideable_type, started_at and ended_at to the duplicate ride_id from above temp table
+SELECT temp_table.ride_id, cyclist_trip_data.rideable_type, cyclist_trip_data.started_at, cyclist_trip_data.ended_at
+FROM temp_table
+INNER JOIN `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data` AS cyclist_trip_data
+ON temp_table.ride_id = cyclist_trip_data.ride_id
+ORDER BY ride_id
+
+--this table shows that for each of the duplicate ride_id, there is one that has a greater started_at than ended_at, which means they started later than they ended
+
+--check each month and see which one contains a wrong date, where the year is not 2020/2021
+--aug_2020 contains wrong started_at and ended_at
+--further check seems like the day and the year are swapped, as can see from the aug_2020 table where all the days are '20' which is unlikely
+SELECT * FROM(
+SELECT CAST(EXTRACT(YEAR FROM ended_at) AS INT64) AS YearIntColumn
+FROM `my-first-sandbox-project11112.project_cyclistic.dec_2020`
+)
+WHERE YearIntColumn <> 2020
+
+
+
+-- Delete all rows that has any null values
+DELETE
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE TRIM(ride_id) IS NULL
+OR TRIM(rideable_type) IS NULL
+OR started_at IS NULL
+OR ended_at IS NULL
+OR TRIM(start_station_name) IS NULL 
+OR TRIM(start_station_id) IS NULL
+OR TRIM(end_station_name) IS NULL
+OR TRIM(end_station_id) IS NULL
+OR start_lat IS NULL
+OR start_lng IS NULL
+OR end_lat IS NULL
+OR end_lng IS NULL
+OR TRIM(member_casual) IS NULL
+
+
+--Delete rows where the started_at column is more than the ended_at column
+DELETE
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE started_at >= ended_at
+
+
+--check if there are still duplicate ride_id (yes, but different date)
+SELECT ride_id, COUNT(ride_id)
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+GROUP BY ride_id
+HAVING COUNT(ride_id) >1
+
+
+--check if there are still null values (nil)
+SELECT *
+FROM `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data`
+WHERE member_casual IS NULL

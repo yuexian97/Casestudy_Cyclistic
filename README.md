@@ -7,4 +7,3 @@ SQL is used for data cleaning and analysis,
 Tableau is used for data visualization,
 Microsoft powerpoint is used for presentation
 
-Please refer to my walkthrough of the project.

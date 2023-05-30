@@ -1,4 +1,4 @@
-# read me
+# Casestudy of a bike sharing company
 Cyclistic Casestudy Project- Capstone project from Google Data Analytics Professional Certificate
 
 The casestudy is on the behavioural patterns of its users, a bike-share company called Cyclistic in Chicago, USA.

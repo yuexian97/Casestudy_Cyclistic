@@ -1,0 +1,51 @@
+--Data Preparation
+
+-- Add up all data from the different tables
+CREATE TABLE project_cyclistic.cyclist_trip_data AS
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.apr_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.may_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.jun_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.jul_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.aug_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.sep_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.oct_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.nov_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.dec_2020`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.jan_2021`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.feb_2021`
+UNION ALL
+SELECT ride_id, rideable_type, started_at, ended_at, start_station_name, CAST(start_station_id AS STRING) AS start_station_id, end_station_name, CAST(end_station_id AS STRING) AS end_station_id, start_lat, start_lng, end_lat, end_lng, member_casual
+FROM `my-first-sandbox-project11112.project_cyclistic.mar_2021`
+
+
+
+--Update the format of the started_at and ended_at columns for aug_2020 & cyclist_trip_data as they were in the wrong format, cast function is used because without it it will select as a string instead, so we need to change the string to a timestamp format
+UPDATE `my-first-sandbox-project11112.project_cyclistic.cyclist_trip_data` AS cyclist_trip_data
+
+SET started_at = CAST(FORMAT_TIMESTAMP('%d%d-%m-%Y %H:%M:%S UTC', started_at) AS timestamp)
+
+WHERE started_at < '2020-01-01 00:00:00 UTC'
+
+
+
